@@ -1,6 +1,8 @@
 # Week 1 — App Containerization
 
 ## Required Homework
+ I got the frontend react page for notifications working
+ ![frontend](assets/frontend.png)
  I got the backend notification endpoint working 
  ![backend](assets/backend-notif.png)
 
@@ -18,4 +20,4 @@ I was able to install Docker locally and pulled down the images I pushed to Dock
 ![pull](assets/backend-dockerhub-pull.png)
 ![running](assets/backend%20container%20running.png)
 
-I also got the front end container running but I think there is an issue with the communication between backend and front end because the cruddur app comes up but the feed is blank. Trouble shooting to see if I can get it working
+I also got the front end container running but I think there is an issue with the communication between backend and frontend because the cruddur app loads but the feed is blank. Trouble shooting to see if I can get it working
