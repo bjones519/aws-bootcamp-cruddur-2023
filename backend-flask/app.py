@@ -3,6 +3,11 @@ from flask import request
 from flask_cors import CORS, cross_origin
 import os
 
+#CloudWatch Logs
+import watchtower
+import logging
+from time import strftime
+
 from services.home_activities import *
 from services.user_activities import *
 from services.create_activity import *
@@ -32,11 +37,22 @@ provider.add_span_processor(processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
 
+#X-Ray
 xray_url = os.getenv("AWS_XRAY_URL")
 xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 
+# Configuring Logger to Use CloudWatch
+# LOGGER = logging.getLogger(__name__)
+# LOGGER.setLevel(logging.DEBUG)
+# console_handler = logging.StreamHandler()
+# cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
+# LOGGER.addHandler(console_handler)
+# LOGGER.addHandler(cw_handler)
+# LOGGER.info("testing logs")
+
 app = Flask(__name__)
 
+# Xray
 XRayMiddleware(app, xray_recorder)
 
 # Honeycomb/Initialize automatic instrumentation with Flask
@@ -134,6 +150,12 @@ def data_activities():
 def data_show_activity(activity_uuid):
   data = ShowActivity.run(activity_uuid=activity_uuid)
   return data, 200
+
+@app.after_request
+def after_request(response):
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    LOGGER.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    return response
 
 @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
 @cross_origin()
