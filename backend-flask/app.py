@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
 import os
+from lib.congito_token_verification import CognitoJwtToken
 
 #Rollbar
 import rollbar
@@ -56,6 +57,12 @@ xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 # LOGGER.info("testing logs")
 
 app = Flask(__name__)
+
+cognito_jwt_token = CognitoJwtToken(
+  user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
+  user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
+  region=os.getenv("AWS_DEFAULT_REGION")
+)
 
 # Xray
 XRayMiddleware(app, xray_recorder)
