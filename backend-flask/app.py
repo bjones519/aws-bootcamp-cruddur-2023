@@ -26,8 +26,8 @@ from services.show_activity import *
 from services.notifications_activities import *
 
 #X-Ray
-from aws_xray_sdk.core import xray_recorder
-from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+#from aws_xray_sdk.core import xray_recorder
+#from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
 
 # Honeycomb
 from opentelemetry import trace
@@ -44,8 +44,8 @@ trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
 
 #X-Ray
-xray_url = os.getenv("AWS_XRAY_URL")
-xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
+#xray_url = os.getenv("AWS_XRAY_URL")
+#xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 
 # Configuring Logger to Use CloudWatch
 # LOGGER = logging.getLogger(__name__)
@@ -65,7 +65,7 @@ cognito_jwt_token = CognitoJwtToken(
 )
 
 # Xray
-XRayMiddleware(app, xray_recorder)
+#XRayMiddleware(app, xray_recorder)
 
 # Honeycomb/Initialize automatic instrumentation with Flask
 FlaskInstrumentor().instrument_app(app)
